@@ -27,6 +27,7 @@ def get_blogs():
             blog.update({'content': p})
             blogs.append(blog)
         df = pd.DataFrame(blogs)
+        df.to_csv('blogs.csv', index=False)
     return df
 
 
@@ -49,4 +50,5 @@ def get_articles():
             article.update({'content': content})
             articles.append(article)
         df = pd.DataFrame(articles)
+        df.to_csv('articles.csv', index=False)
         return df
