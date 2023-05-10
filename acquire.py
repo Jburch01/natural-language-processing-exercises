@@ -8,7 +8,7 @@ import numpy as np
 def get_blogs():
     try:    
         df = pd.read_csv('blogs.csv')
-    else FileNotFoundError:
+    except FileNotFoundError:
         url = 'https://codeup.com/blog/'
         headers = {'User-Agent': 'Codeup Data Science'} # Some websites don't accept the pyhon-requests default user-agent
         response = get(url, headers=headers)
@@ -33,7 +33,7 @@ def get_blogs():
 def get_articles():
     try:    
         df = pd.read_csv('articles.csv')
-    else FileNotFoundError:
+    except FileNotFoundError:
         topics = ['business', 'sports', 'technology', 'entertainment']
         articles = []
         for topic in topics:
