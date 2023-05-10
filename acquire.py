@@ -12,6 +12,8 @@ def get_blogs():
         url = 'https://codeup.com/blog/'
         headers = {'User-Agent': 'Codeup Data Science'} # Some websites don't accept the pyhon-requests default user-agent
         response = get(url, headers=headers)
+        soup = b(response.content, 'html.parser')
+        divs = soup.find_all('div', class_='post-content')
         links = []
         for div in divs:
             links.append(div.find('a')['href'])
@@ -19,7 +21,6 @@ def get_blogs():
         for link in links:
             blog = {}
             response = get(link, headers=headers)
-            soup = b(response.content, 'html.parser')
             title = soup.find('h2').text
             p = soup.find_all('p')[4].text
             blog.update({'title': title})
