@@ -36,19 +36,31 @@ def get_articles():
     try:    
         df = pd.read_csv('articles.csv')
     except FileNotFoundError:
-        topics = ['business', 'sports', 'technology', 'entertainment']
-        articles = []
-        for topic in topics:
-            article={}
-            url = f'https://inshorts.com/en/read/{topic}'
+        url = 'https://inshorts.com/en/read'
+        response = get(url)
+        soup = BeautifulSoup(response.content, 'html.parser')
+
+        categories = [li.text.lower() for li in soup.select('li')][1:]
+        categories[0] = 'national'
+
+        inshorts = []
+
+        for category in categories:
+
+            url = 'https://inshorts.com/en/read' + '/' + category
             response = get(url)
-            soup = b(response.content, 'html.parser')
-            title =soup.find_all('span', itemprop='headline')[0].text
-            content = soup.find_all('div', itemprop='articleBody')[0].text
-            content = content.replace('\n', '')
-            article.update({'title': title})
-            article.update({'content': content})
-            articles.append(article)
-        df = pd.DataFrame(articles)
-        df.to_csv('articles.csv', index=False)
-        return df
+            soup = BeautifulSoup(response.content, 'html.parser')
+
+            titles = [span.text for span in soup.find_all('span', itemprop='headline')]
+            contents = [div.text for div in soup.find_all('div', itemprop='articleBody')]
+
+            for i in range(len(titles)):
+
+                article = {
+                    'title': titles[i],
+                    'content': contents[i],
+                    'category': category,
+                }
+
+                inshorts.append(article)
+    return df
